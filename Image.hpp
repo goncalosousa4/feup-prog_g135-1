@@ -9,7 +9,7 @@ namespace prog
   {
   private:
     int _width, _height;
-    vector <Color> image_matix;
+    vector <Color> image_matrix;
   public:
     Image(int w, int h, const Color &fill = {255, 255, 255});
     ~Image();
