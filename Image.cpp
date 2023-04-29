@@ -27,14 +27,4 @@ namespace prog
   {
     return _height;
   }
-    Color &Image::at(int x, int y)
-  {
-    return image_matrix[y][x];
-  }
-
-  const Color &Image::at(int x, int y) const
-  {
-    return image_matrix[y][x];
-  }
-
 }
