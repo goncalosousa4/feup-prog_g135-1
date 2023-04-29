@@ -1,4 +1,7 @@
 #include "Image.hpp"
+#include <iostream>
+using namespace std;
+
 
 namespace prog
 {
@@ -6,16 +9,15 @@ namespace prog
   {
     _width=w;
     _height=h;
-    Color used_fill;
-    used_fill.Color(fill)
-    for (int row=0;row<h ;row++){
-      for(int collum=0; collum<w ;collum++){
-        image_matrix.push_back(used_fill);
+    Color used_fill = fill;
+    for(int row = 0; row < h ; row++){
+      image_matrix.push_back(vector<Color>());
+      for(int collum = 0; collum < w ;collum++){
+        image_matrix[row].push_back(used_fill);
       }
     }
   }
-  Image::~Image()
-  {
+  Image::~Image(){
   }
   int Image::width() const
   {
@@ -25,17 +27,14 @@ namespace prog
   {
     return _height;
   }
-
-  // TODO: remove this DUMMY_color variable once you have appropriate fields for representing image pixels.
-  Color DUMMY_color;
-
-  Color& Image::at(int x, int y)
+    Color &Image::at(int x, int y)
   {
-    return DUMMY_color;
+    return image_matrix[y][x];
   }
 
-  const Color& Image::at(int x, int y) const
+  const Color &Image::at(int x, int y) const
   {
-    return DUMMY_color;
+    return image_matrix[y][x];
   }
+
 }
