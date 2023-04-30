@@ -2,7 +2,6 @@
 #define __prog_Image_hpp__
 #include <iostream>
 #include "Color.hpp"
-#include "Color.cpp"
 #include <vector>
 using namespace std;
 
