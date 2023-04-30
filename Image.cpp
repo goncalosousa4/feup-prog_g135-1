@@ -1,45 +1,24 @@
-#include "Image.hpp"
-#include "Color.hpp"
+#ifndef __prog_Image_hpp__
+#define __prog_Image_hpp__
 #include <iostream>
+#include "Color.hpp"
+#include <vector>
 using namespace std;
-
 
 namespace prog
 {
-  Image::Image(int w, int h, const Color &fill)
+  class Image
   {
-    _width  = w;
-    _height = h;
-
-    for(int row = 0; row < _height ; row++)
-    {
-      vector<Color> new_row(_width, fill);
-      image_matrix.push_back(new_row);
-
-    }
-  }
-
-  Image::~Image()
-  {
-  }
-
-  int Image::width() const
-  {
-    return _width;
-  }
-
-  int Image::height() const
-  {
-    return _height;
-  }
-
-  Color& Image:: at(int x, int y)
-  {
-    return image_matrix[y][x];
-  }
-
-    const Color& Image::at(int x, int y) const
-  {
-    return image_matrix[y][x];
-  }
+  private:
+    int _width, _height;
+    vector<vector <Color>> image_matrix;
+  public:
+    Image(int w, int h, const Color &fill = {255, 255, 255});
+    ~Image();
+    int width() const;
+    int height() const;
+    Color &at(int x, int y);
+    const Color &at(int x, int y) const;
+  };
 }
+#endif
