@@ -30,7 +30,6 @@ namespace prog {
     Script::~Script() {
         clear_image_if_any();
     }
-
     void Script::run() {
         string command;
         while (input >> command) {
@@ -47,7 +46,12 @@ namespace prog {
             if (command == "save") {
                 save();
                 continue;
-            } 
+            }
+            if (command == "invert"){
+                invert();
+                continue;
+            }
+            
             // TODO ...
 
         }
@@ -73,4 +77,18 @@ namespace prog {
         input >> filename;
         saveToPNG(filename, image);
     }
+    void Script::invert() {
+        // Replace each individual pixel (r, g, b) to (255-r,255-g,255-b).
+        int w = image->width();
+        int h = image->height();
+        for(int x = 0; x < w; x++){
+            for(int y = 0; y < h; y++){
+        image->at(x, y).red() = 255 - image->at(x,y).red();
+        image->at(x, y).green() = 255 - image->at(x,y).green();
+        image->at(x, y).blue() = 255 - image->at(x,y).blue();
+        }
+    }}
+    
+
+
 }
