@@ -88,7 +88,4 @@ namespace prog {
         image->at(x, y).blue() = 255 - image->at(x,y).blue();
         }
     }}
-    
-
-
 }
