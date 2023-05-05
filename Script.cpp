@@ -51,7 +51,18 @@ namespace prog {
                 invert();
                 continue;
             }
-            
+            if (command == "replace"){
+                replace();
+                continue;
+            }
+            if (command == "h_mirror"){
+                h_mirror();
+                continue;
+            }
+            if (command == "add"){
+                add();
+                continue;
+            }
             // TODO ...
 
         }
@@ -83,9 +94,51 @@ namespace prog {
         int h = image->height();
         for(int x = 0; x < w; x++){
             for(int y = 0; y < h; y++){
-        image->at(x, y).red() = 255 - image->at(x,y).red();
-        image->at(x, y).green() = 255 - image->at(x,y).green();
-        image->at(x, y).blue() = 255 - image->at(x,y).blue();
+                image->at(x, y).red() = 255 - image->at(x,y).red();
+                image->at(x, y).green() = 255 - image->at(x,y).green();
+                image->at(x, y).blue() = 255 - image->at(x,y).blue();
+            }
         }
-    }}
+    }
+    void Script::replace(){
+        int w = image->width();
+        int h = image->height();                
+        int r1, g1, b1, r2, g2, b2;
+        input >> r1 >> g1 >> b1;
+        input >> r2 >> g2 >> b2;
+        for(int x = 0; x < w; x++){
+            for(int y = 0; y < h; y++){
+                if(image->at(x, y).red() == r1 && image->at(x, y).green() == g1 && image->at(x, y).blue() == b1){
+                    image->at(x, y).red() = r2;
+                    image->at(x, y).green() = g2;
+                    image->at(x, y).blue() = b2;
+                }
+            }
+        }
+    } 
+    void Script::h_mirror(){
+        int w = image->width();
+        int h = image->height();
+        int r1, g1, b1, r2, g2, b2;
+        for(int x = 0; x < w/2; x++){
+            for(int y = 0; y < h; y++){
+                    r1 = image->at(x, y).red();
+                    g1 = image->at(x, y).green();
+                    b1 = image->at(x, y).blue();
+                    int o = w - 1 - x;
+                    int p = y;
+                    r2 = image->at(o, p).red();
+                    g2 = image->at(o, p).green();
+                    b2 = image->at(o, p).blue();
+                    image->at(x, y).red() = r2;
+                    image->at(x, y).green() = g2;
+                    image->at(x, y).blue() = b2;
+                    image->at(o, p).red() = r1;
+                    image->at(o, p).green() = g1;
+                    image->at(o, p).blue() = b1;
+                        }
+
+                }
+        }
+    
 }
