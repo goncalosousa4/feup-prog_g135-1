@@ -18,7 +18,15 @@ namespace prog
 
     }
   }
-
+  
+  Image::Image(int w, int h, const vector<vector<Color>> manual_image)
+  {
+    _width = w; // define the width of the matrix (basically is the number of columns)
+    _height = h;  // define the height of the matrix (basically is the number of rows)
+    image_matrix = manual_image;  //defines the image with an already defined matrix
+  }
+  
+  
   Image::~Image()
   {
     // unused destructor
@@ -43,5 +51,10 @@ namespace prog
     const Color& Image::at(int x, int y) const
   {
     return image_matrix[y][x];  // returns the value present on the (x, y) matrix coordinate, a pixel
+  }
+  
+    vector<Color>& Image::get_row(int position_of__row)
+  {
+    return image_matrix[position_of__row];  // return a specified row of the matrix
   }
 } 
