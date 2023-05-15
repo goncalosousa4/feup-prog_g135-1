@@ -63,6 +63,10 @@ namespace prog {
                 add();
                 continue;
             }
+            if(command == "rotate_left"){
+                rotate_left();
+                continue;
+            }
             // TODO ...
 
         }
@@ -140,5 +144,44 @@ namespace prog {
 
                 }
         }
-    
+    void Script::add(){
+        
+        string filename;    
+        input >> filename;
+        Image* imagetest = loadFromPNG(filename);
+        int r,g,b,o,p;
+        input >> r >> g >> b >> o >> p;
+        int w = imagetest->width();
+        int h = imagetest->height();
+        for(int x = 0; x < w; x++){
+            for(int y = 0; y < h; y++){
+                if(imagetest->at(x, y).red() != r || imagetest->at(x, y).green() != g || imagetest->at(x, y).blue() != b){
+                image->at(o+x, p+y).red() = imagetest->at(x, y).red();
+                image->at(o+x, p+y).green() = imagetest->at(x, y).green();
+                image->at(o+x, p+y).blue() = imagetest->at(x, y).blue();
+            }
+            }
+        }
+        delete imagetest;
+    }
+    void Script::rotate_left(){
+        int w = image->width();
+        int h = image->height();
+        Image* image_test = new Image(h, w);
+        Color copy;
+        for(int x = 0; x < w; x++){
+            for(int y = 0; y < h; y++){
+                    copy = image->at(x, y);
+                    int o = w - 1 - x;
+                    int p = y;
+                    image_test->at(p,o) = copy;
+
+            }   
+        }
+        
+        *image = *image_test;
+        delete image_test;
+
+
+    }
 }
