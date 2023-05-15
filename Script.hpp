@@ -24,10 +24,17 @@ namespace prog
     void open();
     void blank();
     void save();
+    //TODO invert
+    void to_gray_scale();
     void replace();
+    void fill(int x, int y, int w, int h, rgb_value r, rgb_value g, rgb_value b);
     void h_mirror();
+    void v_mirror();
     void add();
+    void crop(int x, int y, int w, int h);
     void rotate_left();
+    void rotate_right();
+    void median_filter(int ws);
   };
 }
 #endif
