@@ -6,45 +6,42 @@ using namespace std;
 
 namespace prog
 {
-  //constructor
   Image::Image(int w, int h, const Color &fill)
   {
-    _width  = w;
-    _height = h;
-    vector<Color> new_row(_width, fill); //define the row
+    _width  = w;  // define the width of the matrix (basically is the number of columns)
+    _height = h;  // define the height of the matrix (basically is the number of rows)
+
     for(int row = 0; row < _height ; row++)
     {
-      image_matrix.push_back(new_row); //fill the matrix row by row
+      vector<Color> new_row(_width, fill);  // defines a new row that will be added to the final matrix below
+      image_matrix.push_back(new_row);  // adds the previous row to the end of the matrix with the push.back function 
+
     }
   }
-  //unused destructor
+
   Image::~Image()
   {
+    // unused destructor
   }
 
-  //get with
+
   int Image::width() const
   {
-    return _width;
+    return _width;  // gets the width of the matrix returning it
   }
 
-  //get height
   int Image::height() const
   {
-    return _height;
+    return _height; // gets the height of the matrix returning it
   }
 
-  //get reference to a pixel (braks encapsulation)
   Color& Image:: at(int x, int y)
   {
-    return image_matrix[y][x]; 
-    //the matrix is defined row by row therefore the 'Y' is used as index before 'X'
+    return image_matrix[y][x];  // references the (x, y) pixel of the matrix 
   }
 
-  //get values of a pixel 
-  const Color& Image::at(int x, int y) const
+    const Color& Image::at(int x, int y) const
   {
-    return image_matrix[y][x];
-    //the matrix is defined row by row therefore the 'Y' is used as index before 'X'
+    return image_matrix[y][x];  // returns the value present on the (x, y) matrix coordinate, a pixel
   }
-}
+} 
