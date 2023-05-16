@@ -24,7 +24,7 @@ namespace prog
     void open();
     void blank();
     void save();
-    //TODO invert
+    void invert();
     void to_gray_scale();
     void replace();
     void fill(int x, int y, int w, int h, rgb_value r, rgb_value g, rgb_value b);
