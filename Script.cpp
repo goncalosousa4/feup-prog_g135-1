@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <fstream>
 #include "Script.hpp"
 #include "PNG.hpp"
