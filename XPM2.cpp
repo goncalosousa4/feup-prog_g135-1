@@ -27,6 +27,12 @@ namespace prog {
         char_to_int['d']=13;
         char_to_int['e']=14;
         char_to_int['f']=15;
+        char_to_int['A']=10;
+        char_to_int['B']=11;
+        char_to_int['C']=12;
+        char_to_int['D']=13;
+        char_to_int['E']=14;
+        char_to_int['F']=15;
 
         rgb_value color = char_to_int[hexaColor[0]];
         color *= 16;
