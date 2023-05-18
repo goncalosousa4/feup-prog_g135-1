@@ -62,7 +62,9 @@ namespace prog {
         }
 
 
-bool Color::operator== ( Color c1){
+bool Color::operator== ( Color c1)
+{
+    //define operator == for 2 Colors
     if ((_red==c1.red()) && (_green == c1.green()) && (_blue == c1.blue()))
     {
         return true;
