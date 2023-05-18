@@ -18,6 +18,7 @@ namespace prog
       rgb_value& green();
       rgb_value blue() const;
       rgb_value& blue();
+      bool operator== (Color c2);
   };
 }
 #endif
