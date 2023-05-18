@@ -40,6 +40,7 @@ namespace prog {
                 continue;
             }
             if (command == "blank") {
+
                 blank();
                 continue;
             }
@@ -109,8 +110,19 @@ namespace prog {
                 median_filter(ws);
                 continue;
             }
-            // TODO ...
-
+            if (command == "xpm2_open") {
+                clear_image_if_any();
+                string file;
+                input >> file;
+                image = loadFromXPM2(file);
+                continue;
+            }
+            if (command == "xpm2_save") {
+                string file;
+                input >> file;
+                saveToXPM2(file, image);
+                continue;
+            }
         }
     }
     void Script::open() {
@@ -309,19 +321,19 @@ namespace prog {
         (*image) = Image(original_height, original_width, used_rotated_new_image_matrix); // In a rotation the height and width must exchange values
     }
     
-    vector<Color> get_nearby_pixels(int &column, int &row, int &ws, Image &image)
+    vector<Color> get_nearby_pixels(int &column, int &row, int &ws, Image* image)
     {
         vector<Color> nearby_pixels;
         int initial_row = max(0, row - (ws / 2));
-        int final_row = min(image.height() - 1, row + (ws / 2));
+        int final_row = min(image->height() - 1, row + (ws / 2));
         int initial_column = max(0, column - (ws / 2));
-        int final_column = min(image.width() - 1, column + (ws / 2));
+        int final_column = min(image->width() - 1, column + (ws / 2));
 
         for (int nearby_row = initial_row; nearby_row <= final_row; nearby_row++)
         {
             for (int nearby_column = initial_column; nearby_column <= final_column; nearby_column++)
             {
-                nearby_pixels.push_back(image.at(nearby_column,nearby_row));    // get colors that are within the ws square with center in Pixel(column,row)
+                nearby_pixels.push_back(image->at(nearby_column,nearby_row));    // get colors that are within the ws square with center in Pixel(column,row)
             }
         }
         return nearby_pixels;
@@ -359,38 +371,16 @@ namespace prog {
     {
         int original_height = image->height();
         int original_width  = image->width();
-        vector<vector<Color>> median_filter_matrix; //define de matrix after the median_filter
-        for (int row = 0; row < original_height; row++)
-        {
-            vector<Color> newRow;   //define new row of the matrix after the median_filter
-            for (int column = 0; column < original_width; column++)
-            {
-                vector<Color> nearby_pixels = get_nearby_pixels(column, row, ws, *image);   //get pixels close to Pixel(column,row)
-                newRow.push_back(median_of_nearby_pixels(nearby_pixels));   //add the median filter of the pixel to the new row of matrix
-            }
-            median_filter_matrix.push_back(newRow); // add new row to the matrix
-        }
-        *image = Image(original_width, original_height, median_filter_matrix);  // change the object to the new matrix 
-    /* TODO: fix dynamic memory version
-        int original_height = image->height();
-        int original_width  = image->width();
-        Color** median_filter_matrix = new Color*[original_height];
-        for (int full_row = 0; full_row<original_height; full_row++ )
-        {
-            median_filter_matrix[full_row] = new Color[original_width];
-        }
-
-        int counter_row = 0;
+        Image* new_image = new Image(original_width, original_height);
         for (int row = 0; row < original_height; row++)
         {
             for (int column = 0; column < original_width; column++)
             {
-            vector<Color> nearby_pixels = get_nearby_pixels(column, row, ws, *image);
-            median_filter_matrix[row][column] = median_of_nearby_pixels(nearby_pixels);
+            vector<Color> nearby_pixels = get_nearby_pixels(column, row, ws, image);
+            new_image->at(column,row) = median_of_nearby_pixels(nearby_pixels);
             }
-            counter_row++;
         }
-        *image = Image(original_width, original_height, **median_filter_matrix);
-        */
+        *image = *new_image;
+        delete new_image;
     }
 }
