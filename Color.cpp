@@ -62,18 +62,14 @@ namespace prog {
         }
 
 
-/*
-    // TODO: remove this DUMMY variable once you have appropriate fields for representing colors.
-    rgb_value DUMMY_rgb_value = 0; 
+bool Color::operator== ( Color c1){
+    if ((_red==c1.red()) && (_green == c1.green()) && (_blue == c1.blue()))
+    {
+        return true;
+    }
+    return false;
+}
 
-    rgb_value& Color::red()  {
-        return DUMMY_rgb_value;
-    }
-    rgb_value& Color::green()  {
-      return DUMMY_rgb_value;
-    }
-    rgb_value& Color::blue()  {
-      return DUMMY_rgb_value;
-    }
-    */
+
+
 }
