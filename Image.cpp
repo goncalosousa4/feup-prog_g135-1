@@ -14,7 +14,7 @@ namespace prog
     for(int row = 0; row < _height ; row++)
     {
       vector<Color> new_row(_width, fill);  // defines a new row that will be added to the final matrix below
-      image_matrix.push_back(new_row);  // adds the previous row to the end of the matrix with the push.back function 
+      image_matrix.push_back(new_row);  // adds the previous row to the end of the matrix with the push_back function 
 
     }
   }
@@ -23,7 +23,7 @@ namespace prog
   {
     _width = w; // define the width of the matrix (basically is the number of columns)
     _height = h;  // define the height of the matrix (basically is the number of rows)
-    image_matrix = manual_image;  //defines the image with an already defined matrix
+    image_matrix = manual_image;  //defines the images matrix through an already defined matrix
   }
   
   
@@ -45,16 +45,18 @@ namespace prog
 
   Color& Image:: at(int x, int y)
   {
-    return image_matrix[y][x];  // references the (x, y) pixel of the matrix 
+    return image_matrix[y][x];  // returns the reference to the (x, y) pixel of the matrix
+                                // since the image_matrix is defines row by row it is necessary to use [y][x]
   }
 
     const Color& Image::at(int x, int y) const
   {
     return image_matrix[y][x];  // returns the value present on the (x, y) matrix coordinate, a pixel
+                                // since the image_matrix is defines row by row it is necessary to use [y][x]
   }
   
     vector<Color>& Image::get_row(int position_of__row)
   {
-    return image_matrix[position_of__row];  // return a specified row of the matrix
+    return image_matrix[position_of__row];  // return a whole specified row of the matrix
   }
 } 
