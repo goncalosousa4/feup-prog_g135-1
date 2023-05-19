@@ -214,20 +214,21 @@ namespace prog {
         int r1, g1, b1, r2, g2, b2;
         for(int x = 0; x < w/2; x++){
             for(int y = 0; y < h; y++){
+                                        //we do this to save the values before they change
                     r1 = image->at(x, y).red();     //copy red values of the pixel
                     g1 = image->at(x, y).green();   //copy green values of the pixel
                     b1 = image->at(x, y).blue();    //copy blue values of the pixel
                     int o = w - 1 - x;              //calculate the y h_mirror position of pixel in position (x,y)
                     int p = y;                      //calculate the x h_mirror position of pixel in position (x,y) 
-                    r2 = image->at(o, p).red();
-                    g2 = image->at(o, p).green();
-                    b2 = image->at(o, p).blue();
-                    image->at(x, y).red() = r2;
-                    image->at(x, y).green() = g2;
-                    image->at(x, y).blue() = b2;
-                    image->at(o, p).red() = r1;
-                    image->at(o, p).green() = g1;
-                    image->at(o, p).blue() = b1;
+                    r2 = image->at(o, p).red();     //saves the red value of the pixel before the changes so we can use it later
+                    g2 = image->at(o, p).green();   //saves the green value of the pixel before the changes so we can use it later
+                    b2 = image->at(o, p).blue();    //saves the blue value of the pixel before the changes so we can use it later
+                    image->at(x, y).red() = r2;     //change the inicial r1 value to r2
+                    image->at(x, y).green() = g2;   //change the inicial g1 value to g2
+                    image->at(x, y).blue() = b2;    //change the inicial b1 value to b2
+                    image->at(o, p).red() = r1;     //change the inicial r2 value to r1
+                    image->at(o, p).green() = g1;   //change the inicial g2 value to g1
+                    image->at(o, p).blue() = b1;    //change the inicial b2 value to b1
                         }
 
                 }
