@@ -320,7 +320,7 @@ namespace prog {
             }
             rotated_image_matrix.push_back(new_row);    //add the new row to the new matrix
         }
-        (*image) = Image(original_height, original_width, used_rotated_new_image_matrix); //change the original Image
+        (*image) = Image(original_height, original_width, rotated_image_matrix); //change the original Image
         // In a rotation the height and width must exchange values
     }
     
