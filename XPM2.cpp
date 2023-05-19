@@ -96,7 +96,7 @@ namespace prog {
     vector<Color> get_different_colors(const Image* image)
         //return a vector with the different colors in image 
     {
-        vector<Color> colors_in_the_image;
+        vector<Color> colors_in_the_image;  // define a vector that will store every different color in the image
         int height = image->height();
         int width = image->width();
         for (int row = 0; row < height; row++)
@@ -105,7 +105,7 @@ namespace prog {
             {
                 if (find(colors_in_the_image.begin(), colors_in_the_image.end(), image->at(column,row)) == colors_in_the_image.end() )
                 {
-                    colors_in_the_image.push_back(image->at(column,row));
+                    colors_in_the_image.push_back(image->at(column,row));   //if the color in position (column, row) is't in colors_in_the_image add it 
                 }
             }
         }
@@ -113,40 +113,44 @@ namespace prog {
     }
 
     string rgb_value_to_hexadecimal(rgb_value rgb)
+        //turn a rgb_value to it's corresponding string in hexadecimal
+        //only 2 chars are nedded to represent rgb in hexadecimal since it won't be bigger that 255
     {
         string hexadecimal_rgb_value;
-        int remainder = rgb % 16;
+        int remainder = rgb % 16;   //calculate the second char using %16, it will be put in the first position of the string
         if (remainder < 10)
         {
-            hexadecimal_rgb_value.push_back('0' + remainder);
+            hexadecimal_rgb_value.push_back('0' + remainder);   //used if second char is a number 
         }
         else
         {
-            hexadecimal_rgb_value.push_back('7' + remainder );
+            hexadecimal_rgb_value.push_back('7' + remainder );  //used if second char is a letter
         }
         rgb /= 16;
-        remainder = rgb % 16;
+        remainder = rgb % 16;      //calculate the first char using %16, it will be put in the second position of the string
         if (remainder < 10)
         {
-            hexadecimal_rgb_value.push_back('0' + remainder);
+            hexadecimal_rgb_value.push_back('0' + remainder);   //used if second char is a number
         }
         else
         {
-            hexadecimal_rgb_value.push_back('7' + remainder );
+            hexadecimal_rgb_value.push_back('7' + remainder );  //used if second char is a letter
         }
-        reverse(hexadecimal_rgb_value.begin(), hexadecimal_rgb_value.end());
+        reverse(hexadecimal_rgb_value.begin(), hexadecimal_rgb_value.end());    //reverses the string so that the second and first character will be in the correct position
         return hexadecimal_rgb_value;
     }
     string Color_to_hexadecimal(Color color)
+        //turn a Color to it's string in hexadecimal
     {
         string hexadecimal_color = "#";
-        hexadecimal_color += rgb_value_to_hexadecimal(color.red());
-        hexadecimal_color += rgb_value_to_hexadecimal(color.green());
-        hexadecimal_color += rgb_value_to_hexadecimal(color.blue());
+        hexadecimal_color += rgb_value_to_hexadecimal(color.red());     //add the chars for red to hexadecimal_color
+        hexadecimal_color += rgb_value_to_hexadecimal(color.green());   //add the chars for green to hexadecimal_color
+        hexadecimal_color += rgb_value_to_hexadecimal(color.blue());    //add the chars for blue to hexadecimal_color
         return hexadecimal_color;
     }
 
 char find_correspondent_char(Color color,vector<pair<Color, char>> Color_to_char )
+    //find the character that correspons to a given Color
 {
     for (pair<Color, char> pair : Color_to_char)
     {
@@ -161,22 +165,22 @@ char find_correspondent_char(Color color,vector<pair<Color, char>> Color_to_char
     {
         ofstream output_file(file);
         output_file << "! XPM2" << '\n';
-        vector<Color> colors_in_the_image = get_different_colors(image);
+        vector<Color> colors_in_the_image = get_different_colors(image);    //get all different colors in a image   
         int width = image->width(); int height = image->height();
-        int number_different_colors = colors_in_the_image.size();
-        output_file << width << " " << height << " " << number_different_colors << " 1" << '\n';
-        vector<pair<Color, char>> Color_to_char;
+        int number_different_colors = colors_in_the_image.size();           //get number of different colors in a image
+        output_file << width << " " << height << " " << number_different_colors << " 1" << '\n';    //write the line with the image dimensions and number of colors
+        vector<pair<Color, char>> Color_to_char;    //Vector containing pair with a Color and it's corresponding char
         for (int number_of_color = 0; number_of_color < number_different_colors;number_of_color++ )
         {
-            char temp_simbol = ('A' + number_of_color);
-            output_file << temp_simbol << " c " << (Color_to_hexadecimal(colors_in_the_image[number_of_color])) << '\n';
+            char temp_simbol = ('A' + number_of_color); //calculate the simbol that will represent a Color
+            output_file << temp_simbol << " c " << (Color_to_hexadecimal(colors_in_the_image[number_of_color])) << '\n';    //write a line of the corresponding char and it's Color
             Color_to_char.push_back( {colors_in_the_image[number_of_color], temp_simbol} );
         }
         for (int row = 0; row < height; row++ )
         {
             for (int column = 0; column < width; column++)
             {
-            output_file << find_correspondent_char(image->at(column, row), Color_to_char);
+            output_file << find_correspondent_char(image->at(column, row), Color_to_char);  //write the line of chars that represent the matrix of the image
             }
             output_file << '\n';
         }
