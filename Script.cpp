@@ -111,7 +111,7 @@ namespace prog {
                 continue;
             }
             if (command == "xpm2_open") {
-                clear_image_if_any();
+                clear_image_if_any(); //clears possible memory alocated for the image preventing memory leaks
                 string file;
                 input >> file;
                 image = loadFromXPM2(file);
@@ -168,7 +168,7 @@ namespace prog {
         {
             for (int column = 0; column < width; column++)
             {
-                Color &p    = image->at(column, row);   //get pixel to aplly the gray scale
+                Color &p    = image->at(column, row);   //get pixel to aplly gray scale
                 rgb_value v = (p.red() + p.green() + p.blue()) / 3; //get the gray scale of a specific pixel
                 p.red()     = v; //change the red rgb value
                 p.green()   = v; //change the green rgb value
@@ -187,7 +187,8 @@ namespace prog {
         input >> r2 >> g2 >> b2;
         for(int x = 0; x < w; x++){
             for(int y = 0; y < h; y++){
-                if(image->at(x, y).red() == r1 && image->at(x, y).green() == g1 && image->at(x, y).blue() == b1){
+                if(image->at(x, y).red() == r1 && image->at(x, y).green() == g1 && image->at(x, y).blue() == b1)    //check if pixel must be replaced
+                { 
                     image->at(x, y).red() = r2;
                     image->at(x, y).green() = g2;
                     image->at(x, y).blue() = b2;
@@ -213,11 +214,11 @@ namespace prog {
         int r1, g1, b1, r2, g2, b2;
         for(int x = 0; x < w/2; x++){
             for(int y = 0; y < h; y++){
-                    r1 = image->at(x, y).red();
-                    g1 = image->at(x, y).green();
-                    b1 = image->at(x, y).blue();
-                    int o = w - 1 - x;
-                    int p = y;
+                    r1 = image->at(x, y).red();     //copy red values of the pixel
+                    g1 = image->at(x, y).green();   //copy green values of the pixel
+                    b1 = image->at(x, y).blue();    //copy blue values of the pixel
+                    int o = w - 1 - x;              //calculate the y h_mirror position of pixel in position (x,y)
+                    int p = y;                      //calculate the x h_mirror position of pixel in position (x,y) 
                     r2 = image->at(o, p).red();
                     g2 = image->at(o, p).green();
                     b2 = image->at(o, p).blue();
@@ -235,8 +236,8 @@ namespace prog {
     void Script::v_mirror()
     {
         int number_of_lines_positons = image->height(); 
-        int swaps_neded = number_of_lines_positons / 2; //the number of operation nedded
-        number_of_lines_positons--; //the max enderence of the rows from the matrix
+        int swaps_neded = number_of_lines_positons / 2; //calculate the number of operation nedded
+        number_of_lines_positons--; //calculate the max address of the rows from the matrix
         for (int i = 0; i<swaps_neded; i++)
         {
             vector<Color> copy_row = image->get_row(i); //copy one row of the matrix
@@ -257,7 +258,9 @@ namespace prog {
         int h = imagetest->height();
         for(int x = 0; x < w; x++){
             for(int y = 0; y < h; y++){
-                if(imagetest->at(x, y).red() != r || imagetest->at(x, y).green() != g || imagetest->at(x, y).blue() != b){
+                if(imagetest->at(x, y).red() != r || imagetest->at(x, y).green() != g || imagetest->at(x, y).blue() != b)
+                {
+                //if the pixel is nor of "neutral" color change it its equivelent in the imagetest
                 image->at(o+x, p+y).red() = imagetest->at(x, y).red();
                 image->at(o+x, p+y).green() = imagetest->at(x, y).green();
                 image->at(o+x, p+y).blue() = imagetest->at(x, y).blue();
@@ -269,34 +272,34 @@ namespace prog {
     
     void Script::crop(int x, int y, int w, int h)
     {
-        vector<vector<Color>> new_image_matrix; //new matrix will be the croped area
+        vector<vector<Color>> new_image_matrix; //new matrix of the croped area
         for (int row = y; row < y+h ;row++)
         {
-            vector<Color> new_row;  //define row of new matrix
+            vector<Color> new_row;  //define new row of new matrix
             for (int column = x; column < x+w; column++)
             {
                 new_row.push_back(image->at(column,row));   //set the values of the new row
             }
-            new_image_matrix.push_back(new_row);    //adds the new roe to the new matrix
+            new_image_matrix.push_back(new_row);    //adds the new row to the new matrix
         }
-        (*image) = Image(w,h,new_image_matrix); // perform the crop
+        (*image) = Image(w,h,new_image_matrix);     // change the original image
     }
     
     void Script::rotate_left()
     {
         int w = image->width();
         int h = image->height();
-        Image* image_test = new Image(h, w);
+        Image* image_test = new Image(h, w);    //define the rotated image with only its dimensions
         Color copy;
         for(int x = 0; x < w; x++){
             for(int y = 0; y < h; y++){
-                    copy = image->at(x, y);
-                    int o = w - 1 - x;
-                    int p = y;
-                    image_test->at(p,o) = copy;
+                    copy = image->at(x, y);     //take a pixel of the original image
+                    int o = w - 1 - x;          //calculate the new y position of the pixel
+                    int p = y;                  //calculate the new x position of the pixel
+                    image_test->at(p,o) = copy; //put the pixel in its rotated position in the rotated image
             }   
         }
-        *image = *image_test;
+        *image = *image_test;   //change image
         delete image_test;
     }
     
@@ -305,29 +308,30 @@ namespace prog {
         int original_height = image->height();
         int original_width  = image->width();
 
-        vector<vector<Color>> rotated_image_matrix; //define rotated matrix
+        vector<vector<Color>> rotated_image_matrix; //define rotated image matrix
         for (int column = 0; column < original_width; column++)
         {
             vector<Color> new_row(original_height); //define new row of the matrix with original_height length
             int position_in_new_row = 0;
             for (int row = original_height - 1; row >= 0; row--)    //due to the propreties of a rotation a row of the new matrix is defined as the equivelent column from the original matrix backwards
             {
-                new_row[position_in_new_row] = image->at(column,row);
+                new_row[position_in_new_row] = image->at(column,row);   //fill the new row with its values from the original image
                 position_in_new_row++;
             }
-            rotated_image_matrix.push_back(new_row);
+            rotated_image_matrix.push_back(new_row);    //add the new row to the new matrix
         }
-        const vector<vector<Color>> used_rotated_new_image_matrix = rotated_image_matrix;   //set values to the original matrix to those of the new one
-        (*image) = Image(original_height, original_width, used_rotated_new_image_matrix); // In a rotation the height and width must exchange values
+        (*image) = Image(original_height, original_width, used_rotated_new_image_matrix); //change the original Image
+        // In a rotation the height and width must exchange values
     }
     
     vector<Color> get_nearby_pixels(int &column, int &row, int &ws, Image* image)
+        //auxiliary function to median_filter, it gets the pixels that are in the square of side ws around a space
     {
         vector<Color> nearby_pixels;
-        int initial_row = max(0, row - (ws / 2));
-        int final_row = min(image->height() - 1, row + (ws / 2));
-        int initial_column = max(0, column - (ws / 2));
-        int final_column = min(image->width() - 1, column + (ws / 2));
+        int initial_row = max(0, row - (ws / 2));                       //get smallest y value of the pixels that are in the square of side ws
+        int final_row = min(image->height() - 1, row + (ws / 2));       //get biggest y value of the pixels that are in the square of side ws
+        int initial_column = max(0, column - (ws / 2));                 //get smallest x value of the pixels that are in the square of side ws
+        int final_column = min(image->width() - 1, column + (ws / 2));  //get biggest x value of the pixels that are in the square of side ws
 
         for (int nearby_row = initial_row; nearby_row <= final_row; nearby_row++)
         {
@@ -340,22 +344,23 @@ namespace prog {
     }
 
     Color median_of_nearby_pixels (vector<Color> nearby_pixels )
+        //auxiliary function to median_filter, it calculates the median of a group of Colors
     {
-        vector<rgb_value> new_red;
-        vector<rgb_value> new_green;
-        vector<rgb_value> new_blue;
+        vector<rgb_value> new_red;      //new_red will colect the red values of the pixels within the square of side ws
+        vector<rgb_value> new_green;    //new_green will colect the green values of the pixels within the square of side ws
+        vector<rgb_value> new_blue;     //new_blue will colect the blue values of the pixels within the square of side ws
         size_t s = nearby_pixels.size();
         for (size_t pos = 0 ; pos<s ; pos++)
         {
-            new_red.push_back(nearby_pixels[pos].red());
-            new_green.push_back(nearby_pixels[pos].green());
-            new_blue.push_back(nearby_pixels[pos].blue());
+            new_red.push_back(nearby_pixels[pos].red());        //fill the vector new_red
+            new_green.push_back(nearby_pixels[pos].green());    //fill the vector new_green
+            new_blue.push_back(nearby_pixels[pos].blue());      //fill the vector new_blue
         }
         sort(new_red.begin(),new_red.end());    //sort the values of red from the nearby pixels
         sort(new_green.begin(),new_green.end()); //sort the values of green from the nearby pixels
         sort(new_blue.begin(),new_blue.end());  //sort the values of blue from the nearby pixels
 
-         size_t median_space = new_red.size() / 2;
+         size_t median_space = new_red.size() / 2; //position of the element in the middle of every vector (because they all have the same size)
         if (new_red.size() % 2 == 0)
         {
             return Color( (new_red[median_space] + new_red[median_space-1]) / 2,
@@ -369,18 +374,20 @@ namespace prog {
 
     void Script::median_filter(int ws)
     {
+        
         int original_height = image->height();
         int original_width  = image->width();
-        Image* new_image = new Image(original_width, original_height);
+        //we can't alter the original image directly since it would change the result of get_nearby_pixels
+        Image* new_image = new Image(original_width, original_height);  //make an image where we will store the pixels after median_filter
         for (int row = 0; row < original_height; row++)
         {
             for (int column = 0; column < original_width; column++)
             {
-            vector<Color> nearby_pixels = get_nearby_pixels(column, row, ws, image);
-            new_image->at(column,row) = median_of_nearby_pixels(nearby_pixels);
+            vector<Color> nearby_pixels = get_nearby_pixels(column, row, ws, image);    //find the pixels that are within the square of side ws
+            new_image->at(column,row) = median_of_nearby_pixels(nearby_pixels);         //add in the new_image the pixel of the original after median filter
             }
         }
-        *image = *new_image;
-        delete new_image;
+        *image = *new_image;    //change to value of image it's median filter counterpart
+        delete new_image;       //prevent a memory leak
     }
 }
