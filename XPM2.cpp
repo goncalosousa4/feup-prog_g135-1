@@ -9,19 +9,21 @@
 namespace prog {
 
     void upper_case( string& hexadecimal_color_string)
+    //auxiliar function of hexavalue_to_rgb
     {
         for ( char &digit : hexadecimal_color_string)
         {
             if ((digit >= 'a') && (digit <= 'f'))
             {
-                digit = 'A' + (digit-'a');
+                digit = 'A' + (digit-'a');  //turn every letter to its upper case counterpart
             }
         }
     }
 
 
     rgb_value hexavalue_to_rgb(string hexaColor)
-    {
+    //return the rgb_value represented by hexaColor
+    {   
         std::map<char,int> char_to_int;
         char_to_int['0']=0;
         char_to_int['1']=1;
@@ -39,7 +41,7 @@ namespace prog {
         char_to_int['D']=13;
         char_to_int['E']=14;
         char_to_int['F']=15;
-        upper_case(hexaColor);
+        upper_case(hexaColor);  //in order to include upper and lower case letters turns every letter in hexaColor to upper case 
         rgb_value color = char_to_int[ (hexaColor[0])];
         color *= 16;
         color += char_to_int[ (hexaColor[1])];
@@ -48,28 +50,29 @@ namespace prog {
 
     Color Hexavalue_to_Color(string hexaColors)
     {
-        string Numbers_of_Red = hexaColors.substr(0,2);
-        string Numbers_of_Green = hexaColors.substr(2,2);
-        string Numbers_of_Blue = hexaColors.substr(4,2);
-        return Color(hexavalue_to_rgb(Numbers_of_Red),hexavalue_to_rgb(Numbers_of_Green),hexavalue_to_rgb(Numbers_of_Blue));
+        string Numbers_of_Red = hexaColors.substr(0,2);     //seperate the string that represent the red value
+        string Numbers_of_Green = hexaColors.substr(2,2);   //seperate the string that represent the green value
+        string Numbers_of_Blue = hexaColors.substr(4,2);    //seperate the string that represent the blue value
+        return Color(hexavalue_to_rgb(Numbers_of_Red),hexavalue_to_rgb(Numbers_of_Green),hexavalue_to_rgb(Numbers_of_Blue));    //return the Color represented by Number_of_Red, Number_of_Green, Number_of_Blue
     }
 
     Image* loadFromXPM2(const std::string& file) {
         vector<vector<Color >> new_image_matrix;
         ifstream input (file);
         string line_of_header;
-        getline(input,line_of_header);
-        getline(input,line_of_header);
-        int width, height, number_of_colors;
+        getline(input,line_of_header);  //ignore the !XPM2 line
+        getline(input,line_of_header);  //get line with the size and number of colors information
+        int width, height, number_of_colors;    //the number of chars per color is contant so it's not stored in any variable
         stringstream(line_of_header) >> width >> height >> number_of_colors;
         std::map<char,Color> maping_of_colors;
         for (int define_color = 0; define_color < number_of_colors; define_color++)
         {
             getline(input, line_of_header);
-            char char_of_color; char is_it_a_color; string hexadecimal_Color;
+            char char_of_color; char is_it_a_color; string hexadecimal_Color;   //the is_it_a_color variable is ignored but it could be used to know what information is in the line being read  
             stringstream(line_of_header) >> char_of_color >> is_it_a_color >> hexadecimal_Color;
 
-            maping_of_colors[char_of_color] = Hexavalue_to_Color(hexadecimal_Color.substr(1,6));
+            maping_of_colors[char_of_color] = Hexavalue_to_Color(hexadecimal_Color.substr(1,6));    //associate the character to its equivelent Color
+                                                                                                    //substr(1,6) is used in order to ignore the '#' simbol
         }
 
         string matrix_line;
@@ -91,6 +94,7 @@ namespace prog {
     }
 
     vector<Color> get_different_colors(const Image* image)
+        //return a vector with the different colors in image 
     {
         vector<Color> colors_in_the_image;
         int height = image->height();
